@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style>
+
+    .blackBox {
+      background: black;
+    }
+
+    .blue {
+      background: blue;
+    }
+
+    .box {
+      height: 150px;
+      margin: 0 10px;
+      min-width: 150px;
+      width: 150px;
+    }
+   
+    .boxSmall {
+      border: 5px solid white;
+      height: 140px;
+      margin: 0 10px;
+      min-width: 140px;
+      width: 140px;
+    }
+
+    .boxGroup {
+      display: flex;
+      justify-content: center;
+      margin: 20px auto;
+      min-width: 500px;
+      padding: 0 30px;
+      width: 70%;
+    }
+
+    .brown {
+      background: brown;
+    }
+
+    .container {
+      min-width: 900px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .green {
+      background: green;
+    }
+
+    .indigo {
+      background: indigo;
+    }
+
+    .orange {
+      background: orange;
+    }
+
+    .red {
+      background: red;
+    }
+
+    .textBox {
+      background: black;
+      color: white;
+      font-size: 25px;
+      height: 125px;
+      margin: 0 auto;
+      padding: 5px;
+      text-align: center;
+      width: 650px;
+    }
+
+    .transparent {
+      background: transparent;
+    }
+
+    .violet {
+      background: violet;
+    }
+
+    .yellow {
+      background: yellow;
+    }
+
+    #instructions {
+      left: 60px;
+      position: absolute;
+      top: 210px;
+      width: 20%;
+    }
+
+    #game {
+      position: absolute;
+      left: 30%;
+    }
+
+    #score {
+      font-family: sans-serif;
+      font-size: 28px;
+      font-weight: bold;
+      height: 60px;
+      left: 60px;
+      padding: 15px;
+      position: absolute;
+      top: 40px;
+      width: 15%;
+    }
+
+    /* for Tablets */
+    @media only screen and (max-width: 960px)
+    {
+      body {
+        background: lightcoral;
+      }
+
+      .box {
+        height: 100px;
+        min-width: 100px;
+        width: 100px;
+      }
+
+      .boxSmall {
+        border: 5px solid white;
+        height: 90px;
+        min-width: 90px;
+        width: 90px;
+      }
+
+      .container {
+        min-width: 10px;
+      }
+
+      .textBox {
+        font-size: 20px;
+        height: 65px;
+        width: 550px;
+      }
+
+      #instructions {
+        position: static;
+        text-align: center;
+        top: 0;
+        width: 90%;
+      }
+
+      #game {
+        margin: auto;
+        position: static;
+        top: 120px;
+        width: 100%;
+      }
+
+      #score {
+        left: 0;
+        top: 190px;
+        width: 20%;
+      }
+    }
+
+    /* for Smart Phones */
+    @media only screen and (max-width: 715px)
+    {
+      body {
+        background: lightblue;
+      }
+
+      .box {
+        height: 60px;
+        min-width: 60px;
+        width: 60px;
+      }
+
+      .boxSmall {
+        border: 5px solid white;
+        height: 50px;
+        min-width: 50px;
+        width: 50px;
+      }
+
+      .boxGroup {
+        min-width: 300px;
+      }
+
+      .container {
+        min-width: 0;
+      }
+
+      .textBox {
+        font-size: 20px;
+        height: 65px;
+        width: 300px;
+      }
+
+      #instructions {
+        font-size: 15px;
+        margin-bottom: 30px;
+        position: static;
+        text-align: center;
+        top: 0;
+        width: 100%;
+      }
+
+      #game {
+        margin: auto;
+        position: static;
+        top: 120px;
+        width: 100%;
+      }
+
+      #score {
+        font-size: 22px;
+        margin-bottom: -55px;
+        margin-left: auto;
+        margin-right: auto;
+        position: static;
+        width: 35%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div id="score">SCORE: 0</div>
+
+    <div id="instructions">
+      <p>Any box that is next to the blank space can be slid into that space by clicking on it.</p>
+      <p>Your objective is to find the Black Box that is hidden behind one of the colored boxes.</p> 
+      <p>Once a Black Box has been found, the colored box will turn black and a new Black Box
+        will be hidden behind one of the remaining colored boxes.</p>
+      <p>Each time you move a box, one point will be added to your score.  You want to achieve the lowest possible score.</p>
+    </div>
+
+    <div id="game">
+      <div class="boxGroup">
+        <div class="box red" id="1"></div>
+        <div class="box orange" id="2"></div>
+        <div class="box yellow" id="3"></div>
+      </div>   
+       
+      <div class="boxGroup">
+        <div class="box green" id="4"></div>
+        <div class="box blue" id="5"></div>
+        <div class="box indigo" id="6"></div>
+      </div>
+       
+      <div class="boxGroup">
+        <div class="box violet" id="7"></div>
+        <div class="box brown" id="8"></div>
+        <div class="box transparent" id="9"></div>
+      </div>
+     
+      <div class="textBox">
+        <p id="gameProgressText"></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+/* These are the id numbers that will keep track of each boxes current location
+ * Only certain classes will be able to move based on where the transparent box is located
+ *
+ * 1  2  3
+ * 4  5  6
+ * 7  8  9
+ *
+ */
+
+  $(document).ready(function()
+  {
+    var activeBox1;
+    var activeBox2;
+    var activeBox3;
+    var activeBox4;
+    var clickedBox;
+    var blackBoxLocation;
+    var blackBoxArray = new Array();
+    var gameOver = false;
+    var score = 0;
+
+    determineActiveBoxes();
+    setBlackBox();
+
+    //this occurs anytime a box is clicked
+    $('.box').click(function(event)
+    {
+      var canMove = canBoxMove();
+
+      if (canMove == true)
+      {
+        if (!gameOver)
+        {
+          increaseScore();
+        }
+
+        //if black box is located here
+        if ($(this).attr('id') == blackBoxLocation)
+        {
+          //show black box
+          $(this).attr('class', 'box blackBox')
+          $('#gameProgressText').text("A Black Box has been found!");
+
+          //if game is over (all black boxes have been found)
+          if (blackBoxArray.length == 7)
+          {
+            $('#gameProgressText').text("The Game has finished.");
+            blackBoxLocation = 0;
+            gameOver = true;
+          }
+          else
+          {
+            setBlackBoxArray();
+            setBlackBox(); //set new Black Box location
+            determineActiveBoxes();    
+          }
+        }
+        else
+        {
+          //swap boxes
+          $(this).removeClass('boxSmall');
+          $(this).addClass('box');
+          $('.transparent').attr('class', $(this).attr('class'));
+          $(this).attr('class', 'box transparent');
+
+          if (!gameOver)
+          {
+            $('#gameProgressText').text(""); //reset game progress textBox
+          }
+         
+          determineActiveBoxes();
+        }
+      }
+      else //when a box is clicked that cannot be moved
+      {
+        $('#gameProgressText').text("This box cannot move.");
+      }
+    }); //end click
+
+    //this will occur when a moveable box is hovered over  
+    $('.box').hover(
+      function()
+      {
+        if (canBoxMove())
+        {
+          $(this).removeClass('box');
+          $(this).addClass('boxSmall');
+        }
+      },
+      function()
+      {
+        if (canBoxMove())
+        {
+          $(this).removeClass('boxSmall');
+          $(this).addClass('box');
+        }
+      }
+    ); //end hover
+
+    function canBoxMove()
+    {
+      clickedBox = event.target.id;
+
+      if (clickedBox == activeBox1 || clickedBox == activeBox2 ||
+          clickedBox == activeBox3 || clickedBox == activeBox4)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    } //end canBoxMove()
+
+    function determineActiveBoxes() //determine which boxes can be moved
+    {  
+      activeBox1 = 0;
+      activeBox2 = 0;
+      activeBox3 = 0;
+      activeBox4 = 0;
+
+      switch($('.transparent').attr('id'))
+      {
+        case "1":
+          activeBox1 = 2;
+          activeBox2 = 4;
+          break;
+        case "2":
+          activeBox1 = 1;
+          activeBox2 = 3;
+          activeBox3 = 5;
+          break;
+        case "3":
+          activeBox1 = 2;
+          activeBox2 = 6;
+          break;
+        case "4":
+          activeBox1 = 1;
+          activeBox2 = 5;
+          activeBox3 = 7;
+          break;
+        case "5":
+          activeBox1 = 2;
+          activeBox2 = 4;
+          activeBox3 = 6;
+          activeBox4 = 8;
+          break;
+        case "6":
+          activeBox1 = 3;
+          activeBox2 = 5;
+          activeBox3 = 9;
+          break;
+        case "7":
+          activeBox1 = 4;
+          activeBox2 = 8;
+          break;
+        case "8":
+          activeBox1 = 5;
+          activeBox2 = 7;
+          activeBox3 = 9;
+          break;
+        case "9":
+          activeBox1 = 6;
+          activeBox2 = 8;
+          break;
+      }
+
+    } //end determineActiveBoxes()
+
+    function increaseScore()
+    {
+      score++;
+      $('#score').text("SCORE: " + score);
+    }
+
+    function randomNumber(min, max)
+    {
+      return Math.floor(Math.random() * (max + 1 - min)) + min;
+    } //end randomNumber()
+
+    function setBlackBox()
+    {
+      blackBoxLocation = 0;
+      var currentTransparent = $('.transparent').attr('id');
+
+      if (blackBoxArray.length == 0)
+      {
+        blackBoxLocation = randomNumber(1, 8);
+      }
+      else
+      {
+        do
+        {
+          //determine box location
+          var found = false;
+          var randomNum = randomNumber(1, 9);
+
+          //restart "do" loop if randomNum = currentTransparent
+          if (randomNum == currentTransparent)
+          {
+            continue;
+          }
+
+          //see if random number is the location of an already found black box
+          for (var i = 0; i < blackBoxArray.length; i++)
+          {  
+            if (blackBoxArray[i] == randomNum)
+            {  
+              found = true;
+              break;
+            }  
+          }
+
+          // set blackBoxLocation
+          if (found != true)
+          {
+            blackBoxLocation = randomNum;
+          }
+
+        } while (blackBoxLocation == 0)
+      }
+    } //end setBlackBox()
+
+    function setBlackBoxArray()
+    {
+      //find all black box locations
+      blackBoxArray = []; //clear array
+      $('.box').each(function()
+      {
+        if ($(this).attr('class') == 'box blackBox' || $(this).attr('class') == 'blackBox box')
+        {
+          blackBoxArray.push($(this).attr('id'));
+        }
+      });
+    } //end setBlackBoxArray()
+  }); //end ready
+</script>
+</html>
